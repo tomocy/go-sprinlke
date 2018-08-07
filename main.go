@@ -9,18 +9,15 @@ import (
 	"time"
 )
 
-const otherWord = "*"
+const (
+	transformsFileName = "transforms.txt"
+	otherWord          = "*"
+)
 
-var transforms = []string{
-	otherWord,
-	otherWord,
-	otherWord,
-	otherWord,
-	otherWord + "app",
-	otherWord + "site",
-	"get" + otherWord,
-	"go" + otherWord,
-	"let's " + otherWord,
+var transforms []string
+
+func init() {
+	transforms = gatherTransformsFromFile(transformsFileName)
 }
 
 func main() {
@@ -30,4 +27,19 @@ func main() {
 		t := transforms[rand.Intn(len(transforms))]
 		fmt.Println(strings.Replace(t, otherWord, s.Text(), -1))
 	}
+}
+
+func gatherTransformsFromFile(fileName string) []string {
+	transforms := make([]string, 0)
+	file, err := os.Open(fileName)
+	if err != nil {
+		return transforms
+	}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		transforms = append(transforms, scanner.Text())
+	}
+
+	return transforms
 }
