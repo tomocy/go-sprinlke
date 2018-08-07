@@ -10,36 +10,36 @@ import (
 )
 
 const (
-	transformsFileName = "transforms.txt"
-	otherWord          = "*"
+	transformPatternsFileName = "transforms.txt"
+	otherWord                 = "*"
 )
 
-var transforms []string
+var transformPatterns []string
 
 func init() {
-	transforms = gatherTransformsFromFile(transformsFileName)
+	transformPatterns = gatherTransformPatternsFromFile(transformPatternsFileName)
 }
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	s := bufio.NewScanner(os.Stdin)
 	for s.Scan() {
-		t := transforms[rand.Intn(len(transforms))]
+		t := transformPatterns[rand.Intn(len(transformPatterns))]
 		fmt.Println(strings.Replace(t, otherWord, s.Text(), -1))
 	}
 }
 
-func gatherTransformsFromFile(fileName string) []string {
-	transforms := make([]string, 0)
+func gatherTransformPatternsFromFile(fileName string) []string {
+	transformPatterns := make([]string, 0)
 	file, err := os.Open(fileName)
 	if err != nil {
-		return transforms
+		return transformPatterns
 	}
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		transforms = append(transforms, scanner.Text())
+		transformPatterns = append(transformPatterns, scanner.Text())
 	}
 
-	return transforms
+	return transformPatterns
 }
