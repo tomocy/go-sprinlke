@@ -14,10 +14,18 @@ const (
 	otherWord                 = "*"
 )
 
-var transformPatterns []string
+var transformPatterns = []string{
+	otherWord,
+	otherWord + otherWord,
+	"go " + otherWord,
+	"let's" + otherWord,
+}
 
 func init() {
-	transformPatterns = gatherTransformPatternsFromFile(transformPatternsFileName)
+	transformPatterns = append(
+		transformPatterns,
+		gatherTransformPatternsFromFile(transformPatternsFileName)...,
+	)
 }
 
 func gatherTransformPatternsFromFile(fileName string) []string {
@@ -39,7 +47,14 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		t := transformPatterns[rand.Intn(len(transformPatterns))]
-		fmt.Println(strings.Replace(t, otherWord, scanner.Text(), -1))
+		replacedText := replaceWith(scanner.Text())
+		fmt.Println(replacedText)
 	}
+}
+
+func replaceWith(text string) string {
+	p := transformPatterns[rand.Intn(len(transformPatterns))]
+	replacedText := strings.Replace(p, otherWord, text, -1)
+
+	return replacedText
 }
