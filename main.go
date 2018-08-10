@@ -20,15 +20,6 @@ func init() {
 	transformPatterns = gatherTransformPatternsFromFile(transformPatternsFileName)
 }
 
-func main() {
-	rand.Seed(time.Now().UTC().UnixNano())
-	s := bufio.NewScanner(os.Stdin)
-	for s.Scan() {
-		t := transformPatterns[rand.Intn(len(transformPatterns))]
-		fmt.Println(strings.Replace(t, otherWord, s.Text(), -1))
-	}
-}
-
 func gatherTransformPatternsFromFile(fileName string) []string {
 	transformPatterns := make([]string, 0)
 	file, err := os.Open(fileName)
@@ -42,4 +33,13 @@ func gatherTransformPatternsFromFile(fileName string) []string {
 	}
 
 	return transformPatterns
+}
+
+func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		t := transformPatterns[rand.Intn(len(transformPatterns))]
+		fmt.Println(strings.Replace(t, otherWord, scanner.Text(), -1))
+	}
 }
